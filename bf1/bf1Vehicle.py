@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import requests
 from io import BytesIO
 from .bf1motto import get_motto
+import logging
 
 vehicle_key = ["","种类：","击杀：","KPM：","摧毁：","驾龄(h)："]
 
@@ -30,10 +31,10 @@ def Vehicle(name):
         # 解析响应的JSON数据
         data = response.json()
         # 在这里可以处理数据，例如打印它或进行其他操作
-        print(f"成功获取玩家{name}的载具数据")
+        logging.info(f"成功获取玩家{name}的载具数据")
         return data
     else:
-        print("请求失败，状态码:", response.status_code)
+        logging.info("请求失败，状态码:", response.status_code)
         return None
 
 def ImageVehicle(name,data,avatar_url,user_id):

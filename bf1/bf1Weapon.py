@@ -2,13 +2,14 @@ from PIL import Image, ImageDraw, ImageFont
 import requests
 from io import BytesIO
 from .bf1motto import get_motto
+import logging
 
 weapon_key = ["","种类：","使用时长(h)：","击杀：","KPM：","命中率：","爆头率：","效率："]
 
 def WeaponStat(name,user_id):
     data = Weapon(name=name)
     if(data==None):
-        print("请求失败，请重新查询")
+        logging.info("请求失败，请重新查询")
         return
     #头像
     avatar_url = data["avatar"]
@@ -31,10 +32,10 @@ def Weapon(name):
         # 解析响应的JSON数据
         data = response.json()
         # 在这里可以处理数据，例如打印它或进行其他操作
-        print(f"成功获取玩家{name}的武器数据")
+        logging.info(f"成功获取玩家{name}的武器数据")
         return data
     else:
-        print("请求失败，状态码:", response.status_code)
+        logging.info("请求失败，状态码:", response.status_code)
         return None
     
 def ImageWeapon(name,data,avatar_url,user_id):
@@ -175,10 +176,3 @@ def StatsWeaponValue(data):
     weapon_value.append(data["hitVKills"])
 
     return weapon_value
-
-#WeaponStat("anshaos")
-# names=["anshaos","zi_feng_0109","IJN-Shokaku","LMCYI"]
-# names1=["zi_feng_0109"]
-# for name in names1:
-#     WeaponStat(name=name,user_id="669667780")
-# #WeaponStat("LMCYI")

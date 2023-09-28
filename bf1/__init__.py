@@ -5,8 +5,12 @@ from .bf1Stat import search_value_in_bfbd,Stats,append_to_bfbd
 from .bf1Vehicle import VehicleStat
 from .bf1Weapon import WeaponStat
 from .bf1motto import add_motto
+from .bf1server import ServerStat
 from pathlib import Path
+import logging
+
 current_dir = Path.cwd()
+logging.basicConfig(filename='bf1bot.log', level=logging.INFO)
 
 stat = on_command("stat", priority=10, block=True)
 bd = on_command("bd",priority=10, block=True)
@@ -14,6 +18,8 @@ weapon = on_command("weapon",priority=10,aliases={'武器','w'},block=True)
 vehicle = on_command("vehicle",priority=10,aliases={'载具','v'},block=True)
 weapon = on_command("weapon",priority=10,aliases={'武器','w'},block=True)
 motto = on_command("座右铭",priority=10,aliases={'motto'},block=True)
+server = on_command("服务器",priority=10,aliases={"server","f"},block=True)
+bf1help = on_command("bfhelp",priority=10,aliases={"战地1帮助","机器人帮助"},block=True)
 
 @stat.handle()
 async def stat_handle(foo: GroupMessageEvent):
@@ -46,11 +52,11 @@ async def stat_handle(foo: GroupMessageEvent):
     # 使用unlink()方法删除文件
     try:
         file_path.unlink()
-        print(f"文件 '{file_path}' 删除成功")
+        logging.info(f"文件 '{file_path}' 删除成功")
     except FileNotFoundError:
-        print(f"文件 '{file_path}' 不存在")
+        logging.info(f"文件 '{file_path}' 不存在")
     except Exception as e:
-        print(f"删除文件时出现错误: {str(e)}")
+        logging.info(f"删除文件时出现错误: {str(e)}")
 
 @bd.handle()
 async def bd_handle(foo: GroupMessageEvent):
@@ -95,11 +101,11 @@ async def vehicle_handle(foo: GroupMessageEvent):
     file_path = Path("./", file_name)
     try:
         file_path.unlink()
-        print(f"文件 '{file_path}' 删除成功")
+        logging.info(f"文件 '{file_path}' 删除成功")
     except FileNotFoundError:
-        print(f"文件 '{file_path}' 不存在")
+        logging.info(f"文件 '{file_path}' 不存在")
     except Exception as e:
-        print(f"删除文件时出现错误: {str(e)}")
+        logging.info(f"删除文件时出现错误: {str(e)}")
 
 @weapon.handle()
 async def weapon_handle(foo: GroupMessageEvent):
@@ -130,11 +136,11 @@ async def weapon_handle(foo: GroupMessageEvent):
     file_path = Path("./", file_name)
     try:
         file_path.unlink()
-        print(f"文件 '{file_path}' 删除成功")
+        logging.info(f"文件 '{file_path}' 删除成功")
     except FileNotFoundError:
-        print(f"文件 '{file_path}' 不存在")
+        logging.info(f"文件 '{file_path}' 不存在")
     except Exception as e:
-        print(f"删除文件时出现错误: {str(e)}")
+        logging.info(f"删除文件时出现错误: {str(e)}")
 
 @motto.handle()
 async def motto_handle(foo: GroupMessageEvent):
@@ -147,5 +153,24 @@ async def motto_handle(foo: GroupMessageEvent):
     else:
         await motto.finish(Message("绑定座右铭失败，请重新绑定或者联系bot作者。"))
     
-
-
+@server.handle()
+async def server_handle(foo: GroupMessageEvent):
+    name = str(foo.get_message())
+    name = name.split()[1]
+    user_id = str(foo.get_user_id())
+    message=""
+    Server_list = ServerStat(name=name)
+    index = 0
+    if Server_list == False:
+        await server.finish(Message("请求失败，可能是网络问题或服务器ID错误，肯定不是程序问题！"))
+    else:
+        for servers in Server_list:
+            message = message + servers + "\n"
+            index +=1
+            if index % 9 == 0:
+                message = message + "\n"
+        await server.finish(Message(message))
+    
+@bf1help.handle()
+async def  bf1help_handle():
+    await bf1help.finish(MessageSegment.image("https://img1.imgtp.com/2023/09/28/USZQG8hH.png"))

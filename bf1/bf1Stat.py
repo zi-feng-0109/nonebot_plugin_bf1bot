@@ -4,6 +4,7 @@ from io import BytesIO
 import random
 import os
 import json
+import logging
 
 
     ##设置text_key
@@ -31,7 +32,7 @@ def Stats(name):
     data["vehicles"]=sorted(data["vehicles"], key=lambda x: x["kills"], reverse=True)
     top_5_vehicles = data["vehicles"][:5]
     ImageStats(data,top_5_weapons,top_5_vehicles)
-    print(isHacker)
+    logging.info(isHacker)
     if isHacker:
         KillMother(name=name)
 
@@ -39,7 +40,9 @@ def Stats(name):
 
 #制作hacker图标
 def KillMother(name):
-    image1 = Image.open('./data/hacker.png')
+    hacker_url = "https://img1.imgtp.com/2023/09/28/MiyOJBGY.png"
+    response = requests.get(hacker_url)
+    image1 = Image.open(BytesIO(response.content))
     image2 = Image.open(f'{name}.png')
     image1.resize((400,400))
     image1 = image1.convert(image2.mode)
@@ -73,10 +76,10 @@ def PlayerStats(name):
         # 解析响应的JSON数据
         data = response.json()
         # 在这里可以处理数据，例如打印它或进行其他操作
-        print(f"成功获取玩家{name}的数据")
+        logging.info(f"成功获取玩家{name}的数据")
         return data
     else:
-        print("请求失败，状态码:", response.status_code)
+        logging.info("请求失败，状态码:", response.status_code)
         return None
 
 #查是否是hacker
@@ -144,7 +147,7 @@ def ImageStats(data,top_5_weapons,top_5_vehicles):
     try:
         result_image.paste(avatar,(avatar_left,avatar_top),avatar)
     except Exception as e:
-        print(f"抛出异常{e}")
+        logging.info(f"抛出异常{e}")
         result_image.paste(avatar,(avatar_left,avatar_top))
 
     #书写玩家数据信息
@@ -173,7 +176,7 @@ def ImageStats(data,top_5_weapons,top_5_vehicles):
             position = (147+170*(i-13),80)
         else:
             position = (147+170*(i-18),98)
-        #print(f"成功写入{i}:{text}")
+        #logging.info(f"成功写入{i}:{text}")
         draw.text(position, text=text, fill=text_color, font=font)
         text_color = (0, 0, 0)
 
@@ -370,7 +373,7 @@ def append_to_bfbd(key, value):
             json.dump(data, file, indent=4)
     return True
 
-#Stats("zi_feng_0109")
+
 
 
     

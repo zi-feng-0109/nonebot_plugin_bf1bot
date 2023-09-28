@@ -1,4 +1,5 @@
 import json
+import logging
 
 def get_motto(key):
     try:
@@ -11,10 +12,10 @@ def get_motto(key):
             else:
                 return False
     except FileNotFoundError:
-        print("文件未找到")
+        logging.info("文件未找到")
         return False
     except json.decoder.JSONDecodeError:
-        print("JSON解析错误")
+        logging.info("JSON解析错误")
         return False
 
 def add_motto(key,value):
@@ -38,5 +39,5 @@ def add_motto(key,value):
         data = {key: value}
         with open(filename, 'w', encoding='utf-8') as file:
             json.dump(data, file, ensure_ascii=False, indent=4)
-        print(f"File '{filename}' 文件不存在，现在已经创建并写入.")
+        logging.info(f"File '{filename}' 文件不存在，现在已经创建并写入.")
         return True
