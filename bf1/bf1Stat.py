@@ -31,7 +31,7 @@ def Stats(name):
     top_5_vehicles=[]
     data["vehicles"]=sorted(data["vehicles"], key=lambda x: x["kills"], reverse=True)
     top_5_vehicles = data["vehicles"][:5]
-    ImageStats(data,top_5_weapons,top_5_vehicles)
+    ImageStats(data,top_5_weapons,top_5_vehicles,name=name)
     logging.info(isHacker)
     if isHacker:
         KillMother(name=name)
@@ -101,7 +101,7 @@ def CheckBan(names):
         return None
 
 #制作Stat图像
-def ImageStats(data,top_5_weapons,top_5_vehicles):
+def ImageStats(data,top_5_weapons,top_5_vehicles,name):
     big_image_url = "https://moe.jitsu.top/img/?sort=1080p&size=mw1024"
     response = requests.get(big_image_url)
     big_image = Image.open(BytesIO(response.content))
@@ -264,7 +264,7 @@ def ImageStats(data,top_5_weapons,top_5_vehicles):
     thanks_text = "感谢gametools.network提供的API支持"
     draw.text((360,545), text=thanks_text, fill=text_color, font=thanks_font)
     # 保存修改后的图像
-    result_image.save(f'{data["userName"]}.png')
+    result_image.save(f'{name}.png')
     
 
 def StatsText(data):
